@@ -58,7 +58,7 @@ src/errors.py           الأخطاء المخصصة ورسائلها بالع�
 src/ui/styles.py        CSS بألوان وخطوط تصميم فيقما
 src/ui/components.py    بطاقات المطاعم والهيدر والـ Chips
 data/restaurants.csv    36 مطعمًا (بيانات تجريبية بأسماء افتراضية أعدها الفريق)
-tests/test_core.py      18 اختبارًا (تعمل بدون مفتاح OpenAI)
+tests/test_core.py      19 اختبارًا (تعمل بدون مفتاح OpenAI)
 static/                 خط Tajawal
 assets/                 شعار الجامعة
 ```
@@ -68,6 +68,9 @@ assets/                 شعار الجامعة
 [![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/yarasaeed10/smart-restaurant-recommender/blob/main/run_in_colab.ipynb)
 
 افتحي الرابط وشغّلي الخلايا بالترتيب. الخلية الأخيرة تعطيك رابط الواجهة (trycloudflare.com).
+
+**دفتر المشروع الكامل (مقسّم على جزئيات الفريق مع الاختبارات والديمو المتحرك):**
+[![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/yarasaeed10/smart-restaurant-recommender/blob/main/Murshid_Restaurant_Recommender_LCH.ipynb)
 
 ## التشغيل على جهازك (VS Code)
 

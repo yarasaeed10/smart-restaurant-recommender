@@ -133,3 +133,20 @@ def test_engine_without_api_key_uses_local_search(df, db, tmp_path):
     # تم حفظ السؤال والرد والترشيحات
     assert len(db.get_messages(sid)) == 2
     assert len(db.get_history(sid)) == len(res.recommendations)
+
+
+def test_local_follow_up_keeps_city(df, db, tmp_path):
+    import dataclasses
+
+    from src.config import get_settings
+    from src.chain import RecommendationEngine
+
+    settings = dataclasses.replace(get_settings(), openai_api_key="", db_path=tmp_path / "y.db")
+    engine = RecommendationEngine(settings, df, db)
+    sid = db.create_session()
+    first = engine.recommend("مطعم بحري عائلي في جدة", sid)
+    second = engine.recommend("طيب أبي أرخص", sid)
+    assert second.preferences.get("city") == "جدة"
+    cities = df.set_index("id").loc[[r["restaurant_id"] for r in second.recommendations], "city"]
+    assert cities.iloc[0] == "جدة"
+    assert first.recommendations

@@ -68,6 +68,8 @@ class RecommendationEngine:
         self.store = None
         self.llm = None
         self.init_error: Optional[AppError] = None
+        self._last_prefs: Dict[str, Dict] = {}  # ذاكرة بسيطة للبحث المحلي: آخر تفضيلات لكل جلسة
+        self._last_top_price: Dict[str, int] = {}
         self._setup()
 
     # ------------------------------------------------------------------ الإعداد
@@ -117,13 +119,14 @@ class RecommendationEngine:
             try:
                 result = self._run_llm(question, history)
             except InvalidModelResponseError as exc:
-                result = self._run_local(question, warning=exc.user_message)
+                result = self._run_local(question, warning=exc.user_message, session_id=session_id)
             except Exception as exc:
                 logger.exception("خطأ أثناء استدعاء النموذج")
-                result = self._run_local(question, warning=LLMUnavailableError(str(exc)).user_message)
+                result = self._run_local(question, warning=LLMUnavailableError(str(exc)).user_message,
+                                         session_id=session_id)
         else:
             warning = self.init_error.user_message if self.init_error else None
-            result = self._run_local(question, warning=warning)
+            result = self._run_local(question, warning=warning, session_id=session_id)
 
         self._save(session_id, question, result)
         return result
@@ -199,9 +202,20 @@ class RecommendationEngine:
             relax_level=relax_level,
         )
 
-    def _run_local(self, question: str, warning: Optional[str] = None) -> EngineResult:
-        prefs = extract_preferences_rule_based(question)
+    def _run_local(self, question: str, warning: Optional[str] = None, session_id: str = "") -> EngineResult:
+        new = extract_preferences_rule_based(question)
+        last = self._last_prefs.get(session_id, {})
+        # طلبات المتابعة: نكمل على التفضيلات السابقة ونعدّل الجديد فقط
+        prefs = {**last, **new} if last and len(new) <= 1 else new
+        if any(w in question for w in ["أرخص", "ارخص"]) and self._last_top_price.get(session_id):
+            # «أرخص»: ميزانية أقل من سعر الترشيح الأول السابق
+            prefs["max_budget_sar"] = self._last_top_price[session_id] - 1
+        self._last_prefs[session_id] = prefs
         recs = local_search(self.df, question, prefs)
+        if recs:
+            top = self.df.loc[self.df["id"] == recs[0]["restaurant_id"], "avg_price_sar"]
+            if not top.empty:
+                self._last_top_price[session_id] = int(top.iloc[0])
         return EngineResult(
             summary="هذه أقرب المطاعم لطلبك من البحث المحلي:",
             recommendations=recs,

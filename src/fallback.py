@@ -106,9 +106,9 @@ def local_search(df: pd.DataFrame, query: str, prefs: Dict | None = None, top_n:
         if prefs.get("cuisine"):
             score += 30 if r["cuisine"] == prefs["cuisine"] else -10
         if prefs.get("max_price_level"):
-            score += 10 if r["price_level"] <= prefs["max_price_level"] else -25
+            score += 10 if r["price_level"] <= prefs["max_price_level"] else -15 * (r["price_level"] - prefs["max_price_level"])
         if prefs.get("max_budget_sar"):
-            score += 10 if r["avg_price_sar"] <= prefs["max_budget_sar"] else -20
+            score += 10 if r["avg_price_sar"] <= prefs["max_budget_sar"] else -60
         for flag, col in [("family_friendly", "family_friendly"), ("vegetarian", "vegetarian_options"),
                           ("delivery", "delivery"), ("outdoor_seating", "outdoor_seating")]:
             if prefs.get(flag):
