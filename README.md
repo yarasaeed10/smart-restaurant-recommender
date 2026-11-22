@@ -63,6 +63,12 @@ static/                 خط Tajawal
 assets/                 شعار الجامعة
 ```
 
+## التشغيل على Google Colab
+
+[![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/yarasaeed10/smart-restaurant-recommender/blob/main/run_in_colab.ipynb)
+
+افتحي الرابط وشغّلي الخلايا بالترتيب. الخلية الأخيرة تعطيك رابط الواجهة (trycloudflare.com).
+
 ## التشغيل على جهازك (VS Code)
 
 ```bash
