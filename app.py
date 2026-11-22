@@ -47,7 +47,7 @@ from src.ui.styles import GLOBAL_CSS
 st.set_page_config(page_title="مُرشِد | نظام ترشيح المطاعم الذكي", page_icon="🍽️", layout="wide")
 st.markdown(GLOBAL_CSS, unsafe_allow_html=True)
 
-LOGO_PATH = BASE_DIR / "assets" / "university_logo.jpg"
+LOGO_PATH = BASE_DIR / "assets" / "university_logo.png"
 SUGGESTIONS = [
     "مطعم بحري عائلي في جدة",
     "فطور شعبي رخيص في الرياض",

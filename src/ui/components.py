@@ -25,7 +25,7 @@ PREF_LABELS = {
 def image_to_data_uri(path: Path) -> str:
     """يحوّل صورة الشعار إلى data URI لعرضها داخل HTML."""
     data = base64.b64encode(Path(path).read_bytes()).decode()
-    return f"data:image/jpeg;base64,{data}"
+    return f"data:image/png;base64,{data}"
 
 
 def hero_html(model_name: str, llm_ready: bool) -> str:
