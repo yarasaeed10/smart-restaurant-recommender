@@ -1,0 +1,11 @@
+.env
+.streamlit/secrets.toml
+__pycache__/
+*.pyc
+.pytest_cache/
+chroma_db/
+chroma_db_uploaded/
+*.db
+data/uploaded_restaurants.csv
+.venv/
+venv/
