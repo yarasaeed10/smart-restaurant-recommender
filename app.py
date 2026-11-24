@@ -266,10 +266,29 @@ elif page == "لوحة المعلومات":
     c3.markdown(metric_html(stats.get("total_recommendations", 0), "ترشيح محفوظ"), unsafe_allow_html=True)
     ratio = stats.get("helpful_ratio")
     c4.markdown(metric_html(f"{ratio}%" if ratio is not None else "—", "نسبة الرضا"), unsafe_allow_html=True)
-    st.subheader("المطاعم حسب المدينة")
-    st.bar_chart(df["city"].value_counts())
-    st.subheader("المطاعم حسب نوع المطبخ")
-    st.bar_chart(df["cuisine"].value_counts())
+    import altair as alt
+
+    def h_bars(series: pd.Series, label: str, color: str) -> alt.Chart:
+        """أعمدة أفقية بأسماء عربية مقروءة على اليمين بدل التسميات المائلة."""
+        data = series.rename_axis(label).reset_index(name="العدد")
+        bars = alt.Chart(data).mark_bar(color=color, cornerRadiusEnd=6, size=18).encode(
+            x=alt.X("العدد:Q", title=None, scale=alt.Scale(reverse=True),
+                    axis=alt.Axis(tickMinStep=1, grid=False)),
+            y=alt.Y(f"{label}:N", sort="-x", title=None,
+                    axis=alt.Axis(orient="right", labelFontSize=14, labelFont="Tajawal",
+                                  labelLimit=200, ticks=False, domain=False)),
+            tooltip=[label, "العدد"])
+        text = bars.mark_text(align="right", dx=-6, font="Tajawal", fontSize=13,
+                              fontWeight="bold", color="#0f2a30").encode(text="العدد:Q")
+        return (bars + text).properties(height=max(26 * len(data), 120)).configure_view(strokeWidth=0)
+
+    left, right = st.columns(2)
+    with right:
+        st.subheader("المطاعم حسب المدينة")
+        st.altair_chart(h_bars(df["city"].value_counts(), "المدينة", "#2BB3B1"), use_container_width=True)
+    with left:
+        st.subheader("المطاعم حسب نوع المطبخ")
+        st.altair_chart(h_bars(df["cuisine"].value_counts(), "المطبخ", "#E3A33A"), use_container_width=True)
     if stats.get("top_restaurants"):
         st.subheader("الأكثر ترشيحًا")
         st.dataframe(pd.DataFrame(stats["top_restaurants"]).rename(
