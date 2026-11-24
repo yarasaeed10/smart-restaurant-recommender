@@ -40,7 +40,7 @@ section[data-testid="stSidebar"] {{ background: {COLORS['deep']}; }}
 section[data-testid="stSidebar"] * {{ color: #FFFFFFDD; }}
 section[data-testid="stSidebar"] .side-title {{ font-size: 1.1rem; font-weight: 700; color: #fff; margin: .6rem 0 0; }}
 section[data-testid="stSidebar"] .side-sub {{ font-size: .82rem; opacity: .65; }}
-.logo-box {{ background: #fff; border-radius: 18px; padding: 14px; text-align: center; }}
+.logo-box {{ background: transparent; padding: 6px 4px 10px; text-align: center; }}
 .logo-box img {{ max-width: 100%; }}
 .status-box {{ background: rgba(255,255,255,.07); border-radius: 14px; padding: 12px 14px; font-size: .85rem; line-height: 1.9; }}
 .status-box b {{ color: {COLORS['saffron']} !important; }}
